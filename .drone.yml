@@ -3,7 +3,7 @@ name: default
 
 workspace:
   base: /app
-  path: src/github.com/akarshthodupunuri/caching-service/docker
+  path: src/github.com/akarshthodupunuri/caching-service
 
 steps:
 - name: docker
@@ -22,6 +22,7 @@ steps:
           from_secret= redis_password
       - REDIS_PORT=17929
       - SERVER_PORT=5000
+    Dockerfile: /docker/Dockerfile
   when:
     branch: master
     event: push
