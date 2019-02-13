@@ -14,7 +14,7 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-COPY . /app
+COPY ./cachingservice.py /app/cachingservice.py
 
 ARG REDIS_URL
 
