@@ -1,0 +1,9 @@
+# Kubernetes Service
+
+1. Install MiniKube
+2. Create the deployment
+"kubectl create deployment caching-service --image=docker.io/akarshthodupunuri/caching-service" 
+3. Create a service (Service can be exposed to public internet using the type as LoadBalancer)
+"kubectl expose deployment caching-service --type=LoadBalancer --port=$some port"
+4. Access the service:
+"minikube service caching-service"

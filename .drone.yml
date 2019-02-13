@@ -1,0 +1,47 @@
+kind: pipeline
+name: default
+
+workspace:
+  base: /app
+  path: src/github.com/akarshthodupunuri/cachingservice
+
+steps:
+- name: docker
+  image: plugins/docker
+  settings:
+    repo: akarshthodupunuri/caching-service
+    tags: latest
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    build_args:
+      - REDIS_URL=
+          from_secret= redis_url
+      - REDIS_PASSWORD= 
+          from_secret= redis_password
+      - REDIS_PORT=17929
+      - SERVER_PORT=5000
+  when:
+    branch: master
+    event: push
+
+- name: deploy to heroku
+  image: docker
+  commands:
+    - docker login --username=_ --password=$(heroku auth:token) registry.heroku.com
+    - docker pull akarshthodupunuri/caching-service:latest
+    - docker tag akarshthodupunuri/caching-service registry.heroku.com/cachingservice/web
+    - docker push registry.heroku.com/cachingservice/web
+    - docker run --rm -e HEROKU_API_KEY=$(heroku auth:token) akarshthodupunuri/caching-service container:release web -a cachingservice
+  when:
+    brach: master
+    event: push
+
+- name: slack
+  image: plugins/slack
+  settings:
+    webhook: $(webhook)
+    channel: $(slack_channel)
+  when:
+    status: [ success, failure ]
