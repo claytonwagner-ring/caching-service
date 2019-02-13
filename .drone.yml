@@ -3,7 +3,7 @@ name: default
 
 workspace:
   base: /app
-  path: src/github.com/akarshthodupunuri/cachingservice
+  path: src/github.com/akarshthodupunuri/caching-service
 
 steps:
 - name: docker
